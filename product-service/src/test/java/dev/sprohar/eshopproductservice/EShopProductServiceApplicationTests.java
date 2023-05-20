@@ -164,7 +164,7 @@ class EShopProductServiceApplicationTests {
 						.content(body))
 				.andExpect(MockMvcResultMatchers.status().isNoContent());
 
-		Optional<Product> optional = this.productsRepository.findById(product.getSku());
+		Optional<Product> optional = this.productsRepository.findById(product.getId());
 		if (optional.isEmpty()) {
 			fail("Could not find product " + product.getSku());
 		}

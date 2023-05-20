@@ -17,8 +17,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class Product {
     @Id
-    private String sku;
+    private String id;
 
+    private Long sku;
     private String name;
     private String description;
     private BigDecimal price;

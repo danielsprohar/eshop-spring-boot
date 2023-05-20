@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductDto {
     private String id;
+    private Long sku;
     private String name;
     private String description;
     private BigDecimal price;

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductDto {
+    private Long sku;
     private String name;
     private String description;
     private BigDecimal price;

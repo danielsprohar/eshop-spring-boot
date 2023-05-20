@@ -34,7 +34,7 @@ public class ProductController {
 
     private ProductDto mapToProductResponseDto(Product product) {
         return ProductDto.builder()
-                .id(product.getSku())
+                .sku(product.getSku())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
@@ -70,7 +70,7 @@ public class ProductController {
         try {
             Product product = this.productService.getById(id);
             return ProductDto.builder()
-                    .id(product.getSku())
+                    .sku(product.getSku())
                     .name(product.getName())
                     .description(product.getDescription())
                     .price(product.getPrice())
