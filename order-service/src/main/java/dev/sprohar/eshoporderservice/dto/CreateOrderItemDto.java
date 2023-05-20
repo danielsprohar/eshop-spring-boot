@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateOrderItemDto {
-    private Long productId;
+    private String sku;
     private Integer quantity;
     private BigDecimal price;
 }

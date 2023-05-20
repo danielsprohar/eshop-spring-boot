@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderDto {
     private Long id;
-    private Long customerId;
+    private String customerId;
     private String status;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
