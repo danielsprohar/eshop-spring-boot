@@ -1,0 +1,27 @@
+services:
+  mongodb:
+    image: mongo:4.2.24
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    volumes:
+      - eshop-mongodb:/data/db
+    networks:
+      - eshop
+  mysql:
+    image: mysql:8.0.33
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password123456
+      MYSQL_DATABASE: eshop_orders
+    ports:
+      - 3306:3306
+    volumes:
+      - eshop-mysql-orders-db:/var/lib/mysql
+    networks:
+      - eshop
+volumes:
+  eshop-mongodb:
+  eshop-mysql-orders-db:
+networks:
+  eshop:
