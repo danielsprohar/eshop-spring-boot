@@ -10,4 +10,23 @@ public class EShopInventoryServiceApplication {
 		SpringApplication.run(EShopInventoryServiceApplication.class, args);
 	}
 
+	/**
+	 * Initialize the database with some test entries
+	 * 
+	 * @param inventoryRepository
+	 * @return
+	 */
+	// @Bean
+	// CommandLineRunner init(InventoryRepository inventoryRepository) {
+	// return args -> {
+	// Stream.of("123", "456", "789").forEach(sku -> {
+	// Inventory inventory = new Inventory();
+	// inventory.setSku(sku);
+	// inventory.setQuantity(10);
+	// inventoryRepository.save(inventory);
+	// });
+	// inventoryRepository.findAll().forEach(System.out::println);
+	// };
+	// }
+
 }
