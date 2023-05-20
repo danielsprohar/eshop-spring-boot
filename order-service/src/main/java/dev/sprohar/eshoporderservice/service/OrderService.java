@@ -1,6 +1,7 @@
 package dev.sprohar.eshoporderservice.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dev.sprohar.eshoporderservice.dto.CreateOrderDto;
 import dev.sprohar.eshoporderservice.dto.CreateOrderItemDto;
@@ -9,6 +10,7 @@ import dev.sprohar.eshoporderservice.model.OrderItem;
 import dev.sprohar.eshoporderservice.repository.OrderRepository;
 
 @Service
+@Transactional
 public class OrderService {
     private final OrderRepository orderRepository;
 
