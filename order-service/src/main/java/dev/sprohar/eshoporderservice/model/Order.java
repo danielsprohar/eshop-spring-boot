@@ -27,7 +27,10 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "customer_id", nullable = false)
     private String customerId;
+
+    @Column(name = "status", nullable = false, columnDefinition = "varchar(255) default 'CREATED'")
     private String status;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
