@@ -10,18 +10,17 @@ services:
       - eshop
   mysql:
     image: mysql:8.0.33
-    restart: unless-stopped
+    # restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: password123456
-      MYSQL_DATABASE: eshop_orders
     ports:
       - 3306:3306
     volumes:
-      - eshop-mysql-orders-db:/var/lib/mysql
+      - eshop-mysql:/var/lib/mysql
     networks:
       - eshop
 volumes:
   eshop-mongodb:
-  eshop-mysql-orders-db:
+  eshop-mysql:
 networks:
   eshop:
