@@ -27,7 +27,9 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sku;
+    @Column(name = "sku", nullable = false)
+    private Long sku;
+
     private Integer quantity;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
