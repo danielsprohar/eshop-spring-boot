@@ -2,6 +2,8 @@ package dev.sprohar.eshopinventoryservice.model;
 
 import java.time.OffsetDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,8 +31,10 @@ public class Inventory {
     private Integer quantity;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @CreationTimestamp
     private OffsetDateTime createdAt;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @CreationTimestamp
     private OffsetDateTime updatedAt;
 }
