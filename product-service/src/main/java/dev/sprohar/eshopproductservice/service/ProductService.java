@@ -20,7 +20,7 @@ public class ProductService {
 
     public void create(Product product) {
         this.productRepository.insert(product);
-        log.info("Product {} was created", product.getId());
+        log.info("Product {} was created", product.getSku());
     }
 
     public void delete(String id) {
@@ -41,6 +41,6 @@ public class ProductService {
 
     public void update(Product product) {
         this.productRepository.save(product);
-        log.info("Product {} was updated", product.getId());
+        log.info("Product {} was updated", product.getSku());
     }
 }

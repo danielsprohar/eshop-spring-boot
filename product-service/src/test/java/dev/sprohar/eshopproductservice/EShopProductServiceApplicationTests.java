@@ -91,7 +91,7 @@ class EShopProductServiceApplicationTests {
 		assertEquals(1, this.productsRepository.count());
 
 		this.mockMvc.perform(
-				MockMvcRequestBuilders.delete("/api/products/" + product.getId()))
+				MockMvcRequestBuilders.delete("/api/products/" + product.getSku()))
 				.andExpect(MockMvcResultMatchers.status().isNoContent());
 
 		assertEquals(0, this.productsRepository.count());
@@ -117,7 +117,7 @@ class EShopProductServiceApplicationTests {
 		this.mockMvc.perform(
 				MockMvcRequestBuilders.get("/api/products"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(product.getId()));
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(product.getSku()));
 	}
 
 	@Test
@@ -131,9 +131,9 @@ class EShopProductServiceApplicationTests {
 		assertEquals(1, this.productsRepository.count());
 
 		this.mockMvc.perform(
-				MockMvcRequestBuilders.get("/api/products/" + product.getId()))
+				MockMvcRequestBuilders.get("/api/products/" + product.getSku()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(product.getId()));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(product.getSku()));
 	}
 
 	@Test
@@ -159,14 +159,14 @@ class EShopProductServiceApplicationTests {
 		String body = this.mapper.writeValueAsString(dto);
 
 		this.mockMvc.perform(
-				MockMvcRequestBuilders.patch("/api/products/" + product.getId())
+				MockMvcRequestBuilders.patch("/api/products/" + product.getSku())
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body))
 				.andExpect(MockMvcResultMatchers.status().isNoContent());
 
-		Optional<Product> optional = this.productsRepository.findById(product.getId());
+		Optional<Product> optional = this.productsRepository.findById(product.getSku());
 		if (optional.isEmpty()) {
-			fail("Could not find product " + product.getId());
+			fail("Could not find product " + product.getSku());
 		}
 
 		assertEquals("Product 2", optional.get().getName());

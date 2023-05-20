@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @Document(value = "product")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder 
+@Builder
 @Data
 public class Product {
-	@Id
-    private String id;
+    @Id
+    private String sku;
 
     private String name;
     private String description;
