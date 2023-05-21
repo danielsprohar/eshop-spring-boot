@@ -1,13 +1,5 @@
 package dev.sprohar.eshoporderservice.service;
 
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
-
 import dev.sprohar.eshoporderservice.dto.CreateOrderDto;
 import dev.sprohar.eshoporderservice.dto.CreateOrderItemDto;
 import dev.sprohar.eshoporderservice.dto.InventoryQueryResponseDto;
@@ -17,19 +9,30 @@ import dev.sprohar.eshoporderservice.model.Order;
 import dev.sprohar.eshoporderservice.model.OrderItem;
 import dev.sprohar.eshoporderservice.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Service
 @Transactional
 public class OrderService {
+    private static final String INVENTORY_INSTANCE_NAME = "eshop-inventory-service";
+
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     public OrderService(
             final OrderRepository orderRepository,
-            final WebClient webClient) {
+            final WebClient.Builder webClientBuilder) {
         this.orderRepository = orderRepository;
-        this.webClient = webClient;
+        this.webClientBuilder = webClientBuilder;
     }
 
     private OrderItem mapToOrderItem(CreateOrderItemDto dto) {
@@ -56,11 +59,25 @@ public class OrderService {
 
         log.info("Querying inventory service for stock of items: {}", skus);
 
-        InventoryQueryResponseDto[] response = webClient.get()
-                .uri("http://localhost:8082/api/inventory" + query)
-                .retrieve()
-                .bodyToMono(InventoryQueryResponseDto[].class)
-                .block();
+        String url = String.format("http://%s/api/inventory", INVENTORY_INSTANCE_NAME);
+        InventoryQueryResponseDto[]  response = null;
+
+        try {
+            response = webClientBuilder.build()
+                    .get()
+                    .uri(url + query)
+                    .retrieve()
+                    .bodyToMono(InventoryQueryResponseDto[].class)
+                    .block();
+        } catch (RuntimeException e) {
+            log.warn(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item(s) not found");
+        }
+
+        if (response == null) {
+            log.info("Response body is null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
 
         log.info("Received response from inventory service: {}", (Object[]) response);
 
