@@ -1,0 +1,2 @@
+rootProject.name = 'eshop'
+include('discovery-server' ,'inventory-service', 'order-service', 'product-service')

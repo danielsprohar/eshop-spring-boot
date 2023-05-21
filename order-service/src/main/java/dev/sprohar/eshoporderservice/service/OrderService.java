@@ -60,7 +60,7 @@ public class OrderService {
         log.info("Querying inventory service for stock of items: {}", skus);
 
         String url = String.format("http://%s/api/inventory", INVENTORY_INSTANCE_NAME);
-        InventoryQueryResponseDto[]  response = null;
+        InventoryQueryResponseDto[]  response;
 
         try {
             response = webClientBuilder.build()
