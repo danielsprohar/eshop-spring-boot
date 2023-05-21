@@ -1,4 +1,17 @@
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1.1
+    ports:
+      - 8888:8080
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password123456
+    command:
+      - start-dev
+    volumes:
+      - eshop-keycloak:/data/keycloak
+    networks:
+      - eshop
   mongodb:
     image: mongo:4.2.24
     restart: unless-stopped
@@ -10,7 +23,6 @@ services:
       - eshop
   mysql:
     image: mysql:8.0.33
-    # restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: password123456
     ports:
@@ -22,5 +34,6 @@ services:
 volumes:
   eshop-mongodb:
   eshop-mysql:
+  eshop-keycloak:
 networks:
   eshop:
