@@ -2,6 +2,8 @@ package dev.sprohar.eshopinventoryservice.service;
 
 import java.util.List;
 
+import dev.sprohar.eshopinventoryservice.error.ItemNotFoundException;
+import dev.sprohar.eshopinventoryservice.model.Inventory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +20,13 @@ public class InventoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<InventoryQueryResponseDto> isInStock(Long[] skus) {
-        return inventoryRepository.findBySkuIn(skus)
-                .stream()
+    public List<InventoryQueryResponseDto> isInStock(Long[] skus) throws ItemNotFoundException {
+        List<Inventory> list = inventoryRepository.findBySkuIn(skus);
+        if (list.isEmpty()) {
+            throw new ItemNotFoundException("Not all items were found");
+        }
+
+        return list.stream()
                 .map(inventory -> InventoryQueryResponseDto.builder()
                         .sku(inventory.getSku())
                         .isInStock(inventory.getQuantity() > 0)

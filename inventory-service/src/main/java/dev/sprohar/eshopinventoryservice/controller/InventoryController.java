@@ -3,6 +3,8 @@ package dev.sprohar.eshopinventoryservice.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import dev.sprohar.eshopinventoryservice.error.ItemNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.sprohar.eshopinventoryservice.dto.InventoryQueryResponseDto;
 import dev.sprohar.eshopinventoryservice.service.InventoryService;
+import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryController {
@@ -23,12 +27,6 @@ public class InventoryController {
         this.inventoryService = inventoryService;
     }
 
-    /**
-     * Checks if the product(s) is/are in stock.
-     * 
-     * @param sku A single SKU or a comma-separated list of SKUs.
-     * @return true if the product(s) is/are in stock, false otherwise.
-     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<InventoryQueryResponseDto> isInStock(@RequestParam String sku) {
@@ -37,6 +35,10 @@ public class InventoryController {
                 .map(Long::parseLong)
                 .toArray(Long[]::new);
 
-        return inventoryService.isInStock(skus);
+        try {
+            return inventoryService.isInStock(skus);
+        } catch (ItemNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 }
