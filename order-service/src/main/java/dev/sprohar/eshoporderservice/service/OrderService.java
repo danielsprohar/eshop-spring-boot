@@ -23,7 +23,12 @@ import java.util.List;
 @Service
 @Transactional
 public class OrderService {
-    private static final String INVENTORY_INSTANCE_NAME = "eshop-inventory-service";
+    /**
+     * The value corresponds with the value for
+     * <code>spring.application.name</code> in properties file
+     * within the Inventory Service project.
+     */
+    private static final String INVENTORY_SERVICE = "inventory-service";
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
@@ -59,7 +64,7 @@ public class OrderService {
 
         log.info("Querying inventory service for stock of items: {}", skus);
 
-        String url = String.format("http://%s/api/inventory", INVENTORY_INSTANCE_NAME);
+        String url = String.format("http://%s/api/inventory", INVENTORY_SERVICE);
         InventoryQueryResponseDto[]  response;
 
         try {

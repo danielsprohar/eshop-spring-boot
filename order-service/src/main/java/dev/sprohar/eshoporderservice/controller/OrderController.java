@@ -19,10 +19,14 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/api/orders")
 public class OrderController {
     /**
+     * The circuit breaker instance name.
      * This value corresponds with the instance name in
-     * <code>application.properties</code>
+     * <code>application.properties</code>:<br><br>
+     * <code>
+     *     resilience4j.circuitbreaker.instances.inventory
+     * </code>
      */
-    private static final String INVENTORY_SERVICE = "inventory";
+    private static final String CB_INVENTORY_SERVICE = "inventory";
     private final OrderService orderService;
 
 
@@ -37,9 +41,9 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    @TimeLimiter(name = INVENTORY_SERVICE)
-    @Retry(name = INVENTORY_SERVICE)
-    @CircuitBreaker(name = INVENTORY_SERVICE, fallbackMethod = "createOrderFallback")
+    @TimeLimiter(name = CB_INVENTORY_SERVICE)
+    @Retry(name = CB_INVENTORY_SERVICE)
+    @CircuitBreaker(name = CB_INVENTORY_SERVICE, fallbackMethod = "createOrderFallback")
     public CompletableFuture<Order> create(@RequestBody final CreateOrderDto createOrderDto) {
         try {
             return CompletableFuture.supplyAsync(() -> orderService.create(createOrderDto));
