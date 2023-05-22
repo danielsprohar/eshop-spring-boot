@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     /**
@@ -41,8 +43,8 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        UserDetails user = User.withUsername(this.username)
-                .password(encoder.encode(this.password))
+        UserDetails user = User.withUsername(username)
+                .password(encoder.encode(password))
                 .roles("USER")
                 .build();
 
@@ -54,7 +56,10 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorizeHttpRequests) ->
+        http
+                .csrf()
+                .disable()
+                .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests.anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults());
