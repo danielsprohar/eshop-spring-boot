@@ -1,4 +1,12 @@
 services:
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+    volumes:
+      - eshop-zipkin:/data/trace
+    networks:
+      - eshop
   keycloak:
     image: quay.io/keycloak/keycloak:21.1.1
     ports:
@@ -32,8 +40,9 @@ services:
     networks:
       - eshop
 volumes:
+  eshop-zipkin:
+  eshop-keycloak:
   eshop-mongodb:
   eshop-mysql:
-  eshop-keycloak:
 networks:
   eshop:
