@@ -52,7 +52,7 @@ public class OrderService {
                 .build();
     }
 
-    public void create(CreateOrderDto createOrderDto) throws ItemsUnavailableException {
+    public Order create(CreateOrderDto createOrderDto) throws ItemsUnavailableException {
         Order order = mapToOrder(createOrderDto);
         List<String> skus = order.getItems().stream().map(OrderItem::getSku).toList();
         String query = String.format("?sku=%s", String.join(",", skus));
@@ -94,6 +94,6 @@ public class OrderService {
             throw new ItemsUnavailableException("The following items are out of stock: " + outOfStockSkus);
         }
 
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 }
