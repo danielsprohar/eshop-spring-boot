@@ -2,6 +2,8 @@
 
 Demo application for demonstrating the microservices architecture using Spring Boot.
 
+_This document is incomplete._
+
 # Getting Started
 
 Make sure you have [Docker](https://docs.docker.com/engine/install/) installed on your machine.
@@ -64,6 +66,42 @@ When creating the client, make sure to use the
 The client configuration should look like this:
 
 ![Client Configuration!](./images/keycloak-config.png "Client Configuration")
+
+## Getting an Access Token
+
+From the Keycloak Admin Console, navigate to the Realm Settings section, 
+scroll down until you "Endpoints" and open the
+[OpenID Endpoint Configuration](http://localhost:8888/realms/eShop/.well-known/openid-configuration).
+You need to provide the `Client ID` (eshop-client) and the `Client Secret` to the
+[access_token](http://localhost:8888/realms/eShop/protocol/openid-connect/token) endpoint:
+
+```shell
+curl --data 'grant_type=client_credentials&scope=openid&client_id=eshop-client&client_secret=your_client_secret' \
+http://localhost:8888/realms/eShop/protocol/openid-connect/token | json_pp
+```
+
+You should get a response that resembles the following:
+
+```json
+{
+   "access_token" : "your_access_token",
+   "expires_in" : 300,
+   "id_token" : "your_id_token",
+   "not-before-policy" : 0,
+   "refresh_expires_in" : 0,
+   "scope" : "openid email profile",
+   "token_type" : "Bearer"
+}
+```
+
+### Using a REST Client
+
+You can use [Insomnia](https://insomnia.rest/download), or whichever REST client you wish,
+to handle fetching the access tokens. Insomnia will automatically attach the 
+access token to every subsequent request.
+
+![Insomnia REST](./images/insomnia-rest.png "Insomnia Rest")
+
 
 # Start the Microservices
 
