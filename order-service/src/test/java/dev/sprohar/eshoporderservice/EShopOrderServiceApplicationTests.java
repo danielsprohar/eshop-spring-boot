@@ -8,6 +8,8 @@ class EShopOrderServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// https://docs.spring.io/spring-kafka/docs/current/reference/html/#testing
+		// TODO: Test
 	}
 
 }
