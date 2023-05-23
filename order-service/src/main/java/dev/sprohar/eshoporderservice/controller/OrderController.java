@@ -29,7 +29,6 @@ public class OrderController {
     private static final String CB_INVENTORY_SERVICE = "inventory";
     private final OrderService orderService;
 
-
     public OrderController(final OrderService orderService) {
         this.orderService = orderService;
     }

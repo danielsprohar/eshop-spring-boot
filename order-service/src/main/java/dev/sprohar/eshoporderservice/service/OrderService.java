@@ -3,13 +3,16 @@ package dev.sprohar.eshoporderservice.service;
 import dev.sprohar.eshoporderservice.dto.CreateOrderDto;
 import dev.sprohar.eshoporderservice.dto.CreateOrderItemDto;
 import dev.sprohar.eshoporderservice.dto.InventoryQueryResponseDto;
+import dev.sprohar.eshoporderservice.enums.EShopTopics;
 import dev.sprohar.eshoporderservice.enums.OrderStatus;
 import dev.sprohar.eshoporderservice.error.ItemsUnavailableException;
+import dev.sprohar.eshoporderservice.events.OrderCreatedEvent;
 import dev.sprohar.eshoporderservice.model.Order;
 import dev.sprohar.eshoporderservice.model.OrderItem;
 import dev.sprohar.eshoporderservice.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -32,12 +35,15 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
     public OrderService(
             final OrderRepository orderRepository,
-            final WebClient.Builder webClientBuilder) {
+            final WebClient.Builder webClientBuilder,
+            KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate) {
         this.orderRepository = orderRepository;
         this.webClientBuilder = webClientBuilder;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     private OrderItem mapToOrderItem(CreateOrderItemDto dto) {
@@ -65,7 +71,7 @@ public class OrderService {
         log.info("Querying inventory service for stock of items: {}", skus);
 
         String url = String.format("http://%s/api/inventory", INVENTORY_SERVICE);
-        InventoryQueryResponseDto[]  response;
+        InventoryQueryResponseDto[] response;
 
         try {
             response = webClientBuilder.build()
@@ -99,6 +105,11 @@ public class OrderService {
             throw new ItemsUnavailableException("The following items are out of stock: " + outOfStockSkus);
         }
 
-        return orderRepository.save(order);
+        Order newOrder = orderRepository.save(order);
+        kafkaTemplate.send(
+                EShopTopics.ORDER_NOTIFICATIONS.toString(),
+                new OrderCreatedEvent(order.getId())
+        );
+        return newOrder;
     }
 }
