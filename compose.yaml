@@ -1,14 +1,38 @@
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.2
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  broker:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: broker
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      # Single node
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
   zipkin:
     image: openzipkin/zipkin
+    container_name: zipkin
     ports:
       - 9411:9411
     volumes:
-      - eshop-zipkin:/data/trace
+      - zipkin:/data/trace
     networks:
       - eshop
   keycloak:
     image: quay.io/keycloak/keycloak:21.1.1
+    container_name: keycloak
     ports:
       - 8888:8080
     environment:
@@ -17,32 +41,34 @@ services:
     command:
       - start-dev
     volumes:
-      - eshop-keycloak:/data/keycloak
+      - keycloak:/data/keycloak
     networks:
       - eshop
   mongodb:
     image: mongo:4.2.24
+    container_name: eshop_mongodb
     restart: unless-stopped
     ports:
       - 27017:27017
     volumes:
-      - eshop-mongodb:/data/db
+      - mongodb:/data/db
     networks:
       - eshop
   mysql:
+    container_name: eshop_mysql_db
     image: mysql:8.0.33
     environment:
       MYSQL_ROOT_PASSWORD: password123456
     ports:
       - 3306:3306
     volumes:
-      - eshop-mysql:/var/lib/mysql
+      - mysql:/var/lib/mysql
     networks:
       - eshop
 volumes:
-  eshop-zipkin:
-  eshop-keycloak:
-  eshop-mongodb:
-  eshop-mysql:
+  zipkin:
+  keycloak:
+  mongodb:
+  mysql:
 networks:
   eshop:
