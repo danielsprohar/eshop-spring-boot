@@ -1,9 +1,9 @@
 package dev.sprohar.eshoporderservice.service;
 
+import dev.sprohar.eshoporderservice.OrderServiceApplication;
 import dev.sprohar.eshoporderservice.dto.CreateOrderDto;
 import dev.sprohar.eshoporderservice.dto.CreateOrderItemDto;
 import dev.sprohar.eshoporderservice.dto.InventoryQueryResponseDto;
-import dev.sprohar.eshoporderservice.enums.EShopTopics;
 import dev.sprohar.eshoporderservice.enums.OrderStatus;
 import dev.sprohar.eshoporderservice.error.ItemsUnavailableException;
 import dev.sprohar.eshoporderservice.events.OrderCreatedEvent;
@@ -107,8 +107,12 @@ public class OrderService {
 
         Order newOrder = orderRepository.save(order);
         kafkaTemplate.send(
-                EShopTopics.ORDER_NOTIFICATIONS.toString(),
-                new OrderCreatedEvent(order.getId())
+                OrderServiceApplication.ORDER_NOTIFICATIONS_TOPIC,
+                OrderCreatedEvent.builder()
+                        .orderNumber(order.getId())
+                        .customerId(order.getCustomerId())
+                        .customerCellPhone("+15555555555")
+                        .build()
         );
         return newOrder;
     }
