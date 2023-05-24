@@ -1,2 +1,9 @@
 rootProject.name = 'eshop'
-include('api-gateway', 'discovery-server' ,'inventory-service', 'order-service', 'product-service')
+include(
+        'api-gateway',
+        'discovery-server' ,
+        'inventory-service',
+        'notification-service',
+        'order-service',
+        'product-service'
+)

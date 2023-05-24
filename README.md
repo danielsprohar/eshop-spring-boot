@@ -130,3 +130,12 @@ The default username and password are `eureka` and `password`, respectively.
 # Observability with Micrometer and Zipkin
 
 In Spring Boot 3, the Spring team introduced the [Observation API](https://spring.io/blog/2022/10/12/observability-with-spring-boot-3).
+
+
+# Apache Kafka
+
+## View Events
+
+```shell
+docker exec -it broker kafka-console-consumer --topic order_notifications --from-beginning --bootstrap-server localhost:9092
+```
