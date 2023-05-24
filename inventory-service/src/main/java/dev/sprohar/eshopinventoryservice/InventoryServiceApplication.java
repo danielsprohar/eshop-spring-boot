@@ -13,10 +13,10 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class EShopInventoryServiceApplication {
+public class InventoryServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EShopInventoryServiceApplication.class, args);
+		SpringApplication.run(InventoryServiceApplication.class, args);
 	}
 
 	@Bean
