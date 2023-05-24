@@ -38,7 +38,7 @@ import dev.sprohar.eshopproductservice.repository.ProductRepository;
 @SpringBootTest
 @AutoConfigureMockMvc // for testing controllers
 @Testcontainers
-class EShopProductServiceApplicationTests {
+class ProductServiceApplicationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
